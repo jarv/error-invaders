@@ -21,7 +21,6 @@ let dropYPos: number;
 
 const powerUpProbability: number = 8; // percent
 const numJams: number = 6;
-const maxVelocity = 5;
 const maxInvaders = 1;
 const invaderFontSize = 20;
 const kbSize = 40;
@@ -72,8 +71,8 @@ function gameLoop() {
       y: 0,
       kind: 'error',
       dropYPos: dropYPos,
-      vx: Math.random() * maxVelocity,
-      vy: Math.random() * maxVelocity,
+      vx: Math.random() * powerUp.maxInvaderVelocity,
+      vy: Math.random() * powerUp.maxInvaderVelocity,
       text: splash.nextError(),
       fontSize: invaderFontSize,
       maxLife: powerUp.invaderMaxLife,
@@ -204,14 +203,29 @@ function gameLoop() {
             x: invader.x + invader.charPositions[i],
             y: invader.y,
             vx: Math.random() * 4 - 2,
-            vy: Math.random() * 4 - 2,
+            vy: powerUp.bugVy,
             kind: imgHelper.randomBug(),
             maxLife: 1,
-            yAcceleration: 0.05,
+            yAcceleration: powerUp.bugYAccel,
             width: powerUp.bugSize,
             height: powerUp.bugSize,
           });
           invaders.push(s);
+          if (powerUp.doubleBug) {
+            const s2 = newSprite();
+            s2.setUp({
+              x: invader.x + invader.charPositions[i],
+              y: invader.y,
+              vx: Math.random() * 4 - 2,
+              vy: powerUp.bugVy,
+              kind: imgHelper.randomBug(),
+              maxLife: 1,
+              yAcceleration: powerUp.bugYAccel,
+              width: powerUp.bugSize,
+              height: powerUp.bugSize,
+            });
+            invaders.push(s2);
+          }
         });
       } else if (imgHelper.bugs().includes(invader.kind)) {
         bugCount++;
@@ -264,7 +278,7 @@ function spawnDistractions() {
     x: d.center.x,
     y: d.height,
     vx: 0,
-    vy: Math.random() * 4 + 1,
+    vy: powerUp.distractionVy,
     kind: kind,
     maxLife: 1,
     width: powerUp.distractionSize,
@@ -325,6 +339,7 @@ function initialize(): void {
 
 function setupEventListeners(): void {
   canvas.onmousemove = (e) => {
+    if (splash.active) return;
     kb.x = e.clientX - canvas.offsetLeft - kb.width / 2;
     kb.move();
     missleSpawnX = e.clientX - canvas.offsetLeft - missleWidth / 2;

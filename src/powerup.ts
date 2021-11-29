@@ -19,6 +19,9 @@ export class PowerUp {
   private randMissles: boolean = true;
   private spreadShot: boolean = false;
   private powerUpIndex: number = 0;
+  private distrationVyOffset: number = 2;
+  private _maxInvaderVelocity: number = 5;
+  private _doubleBug: boolean = true;
   public _missleVx: number = 0;
 
   private shots: Array<string> = ['0', '1'];
@@ -71,6 +74,9 @@ export class PowerUp {
   }
 
   public apply(): void {
+    this.distrationVyOffset++;
+    this._maxInvaderVelocity++;
+
     if (this.currentPowerUp) this.P[this.currentPowerUp]();
   }
 
@@ -87,9 +93,29 @@ export class PowerUp {
 
   public get missleVx() {
     if (this.spreadShot) {
-      return Math.random() * 4 - 2;
+      return Math.random() * 6 - 3;
     }
     return this._missleVx;
+  }
+
+  public get bugVy() {
+    return -Math.random() * 4;
+  }
+
+  public get bugYAccel() {
+    return 0.15;
+  }
+
+  public get distractionVy() {
+    return Math.random() * 4 + this.distrationVyOffset;
+  }
+
+  public get maxInvaderVelocity() {
+    return this._maxInvaderVelocity;
+  }
+
+  public get doubleBug() {
+    return this._doubleBug;
   }
 
   private setDefault(): void {
@@ -105,5 +131,8 @@ export class PowerUp {
     this.missleSize = 0;
     this.invaderMaxLife = 10;
     this.distractionMaxLife = 10;
+    this.distrationVyOffset = 0;
+    this._maxInvaderVelocity = 5;
+    this._doubleBug = true;
   }
 }
