@@ -46,7 +46,6 @@ export class AudioHelper {
     let s = this.sounds[sound];
     if (!s) return;
 
-    s.load();
     s.pause();
     s.currentTime = 0;
     s.play().catch((_) => {
