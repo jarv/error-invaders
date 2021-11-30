@@ -9,7 +9,6 @@ import { Splash } from './splash';
 import './style.css';
 
 var canvas: HTMLCanvasElement;
-// var splash: HTMLElement;
 var ctx: CanvasRenderingContext2D;
 
 // dimensions
@@ -27,7 +26,6 @@ const kbSize = 40;
 
 let kb: Sprite;
 let imgHelper: ImgHelper;
-// let audioHelper: AudioHelper;
 let audioHelper: AudioHelper;
 let gameJam: GameJam;
 
@@ -51,6 +49,16 @@ var errorCount: number;
 
 function newSprite(): Sprite {
   return deadSprites.pop() || new Sprite(imgHelper, audioHelper);
+}
+
+function filterInPlace<T>(array: Array<T>, condition: (value: T) => boolean) {
+  let next_place = 0;
+
+  for (let value of array) {
+    if (condition(value)) array[next_place++] = value;
+  }
+
+  array.splice(next_place);
 }
 
 function gameLoop() {
@@ -128,10 +136,10 @@ function gameLoop() {
   missles.forEach((missle, _) => {
     missle.move();
     missle.draw(ctx);
+    if (!missle.alive) deadSprites.push(missle);
   });
 
-  deadSprites.push(...missles.filter((missle) => !missle.alive));
-  missles = missles.filter((missle) => missle.alive);
+  filterInPlace(missles, (m) => m.alive);
 
   invaders.forEach((invader, i) => {
     invader.move();
@@ -177,11 +185,9 @@ function gameLoop() {
       }
     }
 
-    // Check if invader is destroyed
-    invader.checkDestroy();
-
     // Spawn extra invaders on destruction if it is an Error type
     if (!invader.alive) {
+      deadSprites.push(invader);
       if (invader.kind === 'error') {
         errorCount++;
         gameJam.add();
@@ -237,8 +243,7 @@ function gameLoop() {
     invader.draw(ctx);
   });
 
-  deadSprites.push(...invaders.filter((invader) => !invader.alive));
-  invaders = invaders.filter((invader) => invader.alive);
+  filterInPlace(invaders, (i) => i.alive);
 
   if (gameJam.newJam) {
     flashDistraction.enabled = true;
@@ -330,6 +335,7 @@ function initialize(): void {
   invaders = [];
   missles = [];
   deadSprites = [];
+  audioHelper.backgroundRate = 1;
   gameJam = new GameJam(
     0,
     height - jamHeight,

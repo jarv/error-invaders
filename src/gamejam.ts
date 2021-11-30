@@ -112,7 +112,7 @@ export class GameJam {
     let maxYPos = Math.max(...sprite.positions.map((p) => p.y));
     let hitJams: Array<Jam> = [];
 
-    this.jams.forEach((jam, _) => {
+    this.jams.forEach((jam, i) => {
       if (maxYPos < jam.y) return;
 
       if (jam.active && isHit) {
@@ -128,6 +128,7 @@ export class GameJam {
           isHit = true;
           this.crashCount++;
           this.audioHelper.play('destroy');
+          this.audioHelper.backgroundRate = 1 + (i + 1) / this.jams.length;
         }
       }
     });
@@ -150,6 +151,7 @@ export class GameJam {
         this.newJam = true;
         this.hitJams.add(i);
         this.audioHelper.play('newJam');
+        this.audioHelper.backgroundRate = 1 + (i + 1) / this.jams.length;
         return;
       }
     }

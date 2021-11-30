@@ -104,7 +104,6 @@ export class Sprite {
   private audioHelper: AudioHelper | undefined;
 
   public move = (): void => {
-    // this.clearSprite(ctx);
     if (this.isDropping && this._y <= this.dropYPos) {
       this._y += 2;
       this.isDropping = true;
@@ -121,20 +120,9 @@ export class Sprite {
       this.angle += this.va;
     }
     this.checkDecay();
+    this.checkDestroy();
     this.setCoordinates();
   };
-
-  // private clearSprite = (ctx: CanvasRenderingContext2D): void => {
-  //   if (this.rotate) {
-  //     ctx.save();
-  //     ctx.translate(this.center.x, this.center.y);
-  //     ctx.rotate(this.angle);
-  //     ctx.clearRect(-this.width / 2, -this.height / 2, this.width, this.height);
-  //     ctx.restore();
-  //     return;
-  //   }
-  //   ctx.clearRect(this._x - 2, this._y - 2, this.width + 5, this.height + 5);
-  // };
 
   private checkDecay = (): void => {
     if (!this.range) {
@@ -290,13 +278,11 @@ export class Sprite {
     return false;
   }
 
-  public checkDestroy(): void {
+  private checkDestroy(): void {
     if (this.maxLife === 0 || this.life > 0) {
       return;
     }
-
     // destroyed!
-
     this.alive = false;
   }
 

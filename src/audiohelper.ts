@@ -6,10 +6,13 @@ import beepUrl from '../sounds/gameaudio-click-pop.wav';
 import powerUpUrl from '../sounds/gameaudio-space-swoosh-brighter.wav';
 
 export class AudioHelper {
-  background: HTMLAudioElement;
-  sounds: Record<string, HTMLAudioElement>;
-
+  private background: HTMLAudioElement;
+  private sounds: Record<string, HTMLAudioElement>;
   private _enabled: boolean = false;
+
+  public set backgroundRate(value: number) {
+    this.background.playbackRate = value;
+  }
 
   public constructor() {
     this.sounds = {
@@ -22,6 +25,7 @@ export class AudioHelper {
     this.background = new Audio(backgroundUrl);
     this.background.loop = true;
     this.background.volume = 0.2;
+    this.backgroundRate = 1;
     this._enabled = false;
     this.sounds['bounce'].volume = 0.2;
     this.sounds['beep'].volume = 0.2;

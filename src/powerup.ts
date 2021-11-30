@@ -48,12 +48,15 @@ export class PowerUp {
     },
     'Big bugs!': () => {
       this.bugSize = 60;
+      this._doubleBug = false;
     },
     'Nuclear shots!': () => {
       this.missleKind = 'bomb';
-      this.missleSize = 40;
+      this.missleSize = 35;
       this.distractionMaxLife = 1;
-      this.invaderMaxLife = 1;
+      this.invaderMaxLife = 5;
+      this.randMissles = false;
+      this._missleText = '';
     },
   };
 
@@ -131,7 +134,7 @@ export class PowerUp {
     this.missleSize = 0;
     this.invaderMaxLife = 10;
     this.distractionMaxLife = 10;
-    this.distrationVyOffset = 0;
+    this.distrationVyOffset = 2;
     this._maxInvaderVelocity = 5;
     this._doubleBug = true;
   }
