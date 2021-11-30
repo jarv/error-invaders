@@ -41,6 +41,8 @@ export class Flash {
       kind: 'text',
       color: 'cyan',
       text: '',
+      fontSize: 24,
+      fontWeight: 'bold',
     });
   }
 

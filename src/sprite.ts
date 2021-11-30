@@ -43,6 +43,9 @@ interface SpriteConfig {
   range?: number | undefined;
   fontSize?: number;
   fontName?: string;
+  fontVariant?: string;
+  fontWeight?: string;
+  fontStyle?: string;
   color?: string;
   maxCollisions?: number;
   width?: number;
@@ -74,6 +77,9 @@ export class Sprite {
 
   public fontSize: number = 15;
   public fontName: string = 'Monospace';
+  public fontVariant: string = 'normal';
+  public fontWeight: string = 'normal';
+  public fontStyle: string = 'normal';
   public collisionCnt: CollisionCnt = new CollisionCnt();
   public center: any;
   public range: number | undefined = undefined;
@@ -159,6 +165,9 @@ export class Sprite {
     range = undefined,
     fontSize = 15,
     fontName = 'Monospace',
+    fontVariant = 'normal',
+    fontWeight = 'normal',
+    fontStyle = 'normal',
     color = 'white',
     width = 5,
     height = 5,
@@ -182,6 +191,9 @@ export class Sprite {
     this.life = this.maxLife = maxLife;
     this.fontSize = fontSize;
     this.fontName = fontName;
+    this.fontVariant = fontVariant;
+    this.fontWeight = fontWeight;
+    this.fontStyle = fontStyle;
     this.alive = true;
     this.yAcceleration = yAcceleration;
     this.rotate = rotate;
@@ -260,8 +272,8 @@ export class Sprite {
     this.vy = -Math.abs(this.vy);
     if (this.maxLife > 0) {
       this.life--;
-      if (this.audioHelper && this.kind !== 'error')
-        this.audioHelper.play('hit');
+      if (this.audioHelper && this.kind === 'error')
+        this.audioHelper.play('beep');
     }
   }
 
@@ -321,7 +333,13 @@ export class Sprite {
       case 'error':
       case 'distraction':
       case 'text': {
-        ctx.font = this.fontSize + 'px ' + this.fontName;
+        ctx.font = [
+          this.fontStyle,
+          this.fontVariant,
+          this.fontWeight,
+          `${this.fontSize}px`,
+          this.fontName,
+        ].join(' ');
         if (this.rotate) {
           ctx.translate(this.center.x, this.center.y);
           ctx.rotate(this.angle);

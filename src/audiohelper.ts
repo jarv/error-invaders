@@ -1,26 +1,35 @@
-import soundsUrl from '../sounds/sounds.mp3';
-import backgroundUrl from '../sounds/forest.ambience.mp3';
+import backgroundUrl from '../sounds/norameld-sad-song-loop.mp3';
+import destroyUrl from '../sounds/gameaudio-casual-death-loose.wav';
+import newJamUrl from '../sounds/gameaudio-spacey-1up-power-up.wav';
+import bounceUrl from '../sounds/gameaudio-ping-sound-ricochet.wav';
+import beepUrl from '../sounds/gameaudio-click-pop.wav';
+import powerUpUrl from '../sounds/gameaudio-space-swoosh-brighter.wav';
 
 export class AudioHelper {
-  audio: HTMLAudioElement;
   background: HTMLAudioElement;
-  private static sounds: Record<string, Array<number>> = {
-    bounce: [0.0, 0.1],
-    death: [2, 2.597],
-    hit: [4, 4.034],
-    paddle: [6, 6.082],
-    pause: [8, 8.44],
-    unpause: [10, 10.44],
-    upgrade: [12, 12.297],
-  };
+  sounds: Record<string, HTMLAudioElement>;
 
   private _enabled: boolean = false;
 
   public constructor() {
-    this.audio = new Audio(soundsUrl);
+    this.sounds = {
+      newJam: new Audio(newJamUrl),
+      destroy: new Audio(destroyUrl),
+      bounce: new Audio(bounceUrl),
+      beep: new Audio(beepUrl),
+      powerUp: new Audio(powerUpUrl),
+    };
     this.background = new Audio(backgroundUrl);
     this.background.loop = true;
+    this.background.volume = 0.2;
     this._enabled = false;
+    this.sounds['bounce'].volume = 0.2;
+    this.sounds['beep'].volume = 0.2;
+  }
+
+  public set enabled(value: boolean) {
+    this._enabled = value;
+    value ? this.background.play() : this.background.pause();
   }
 
   public get enabled() {
@@ -28,29 +37,20 @@ export class AudioHelper {
   }
 
   public toggle(): void {
-    if (this._enabled) {
-      this._enabled = false;
-      this.background.pause();
-    } else {
-      this._enabled = true;
-      this.background.play();
-    }
+    this.enabled ? (this.enabled = false) : (this.enabled = true);
   }
 
   public play(sound: string) {
     if (!this._enabled) return;
 
-    this.audio.currentTime = AudioHelper.sounds[sound][0];
-    let stopTime = AudioHelper.sounds[sound][1];
-    this.audio.play();
-    this.audio.addEventListener(
-      'timeupdate',
-      function () {
-        if (this.currentTime > stopTime) {
-          this.pause();
-        }
-      },
-      false,
-    );
+    let s = this.sounds[sound];
+    if (!s) return;
+
+    s.load();
+    s.pause();
+    s.currentTime = 0;
+    s.play().catch((_) => {
+      // ignore errors
+    });
   }
 }

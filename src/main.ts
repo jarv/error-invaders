@@ -141,7 +141,7 @@ function gameLoop() {
 
       invader.hit(missle);
       if (invader.kind == 'mushroom') {
-        audioHelper.play('upgrade');
+        audioHelper.play('powerUp');
         powerUp.select();
         powerUp.apply();
         flashPowerUp.text = '🏆 ' + powerUp.currentPowerUp + ' 🏆';
@@ -301,6 +301,10 @@ function flashAndDistract() {
       kind: 'distraction',
       text: imgHelper.randomDistractionDesc(),
       maxLife: powerUp.distractionMaxLife,
+      fontSize: 24,
+      fontWeight: 'bold',
+      fontVariant: 'small-caps',
+      fontStyle: 'oblique',
     });
     d.x = -d.width;
     invaders.push(d);

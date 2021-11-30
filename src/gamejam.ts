@@ -127,7 +127,7 @@ export class GameJam {
           this.newJam = false;
           isHit = true;
           this.crashCount++;
-          this.audioHelper.play('death');
+          this.audioHelper.play('destroy');
         }
       }
     });
@@ -149,7 +149,7 @@ export class GameJam {
         this.jams[i].active = true;
         this.newJam = true;
         this.hitJams.add(i);
-        this.audioHelper.play('pause');
+        this.audioHelper.play('newJam');
         return;
       }
     }
