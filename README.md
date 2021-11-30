@@ -10,3 +10,7 @@ Canvas HTML game created for the 2021 GitHub Game Off https://itch.io/jam/game-o
 
 Built using [vite JS](https://vitejs.dev/) and [typescript](https://www.typescriptlang.org/).
 No external libraries were used, graphs are emojis, images from https://openmoji.org/.
+
+Background music: https://freesound.org/people/NoraMeld/sounds/273662/
+
+Sound effects: https://freesound.org/people/GameAudio/
